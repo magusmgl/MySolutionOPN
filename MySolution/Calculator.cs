@@ -55,10 +55,10 @@ public static class Calculator
 
     private static void CalculateIntermediateResult(Stack<int> stackForOperands, string element)
     {
-        var a = stackForOperands.Peek();
+        var b = stackForOperands.Peek();
         stackForOperands.Pop();
 
-        var b = stackForOperands.Peek();
+        var a = stackForOperands.Peek();
         stackForOperands.Pop();
 
         var curentResult = GetResultCalculation(a, b, element);
