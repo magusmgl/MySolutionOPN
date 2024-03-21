@@ -1,7 +1,19 @@
-﻿namespace MyNamespace;
+﻿using System.Text;
+
+namespace MyNamespace;
 
 public static class ReadСonsole
 {
+    private static int GetPriorityOperation(char sign)
+    {
+        return sign switch
+        {
+            '-' => 0,
+            '+' => 0,
+            '/' => 1,
+            '*' => 1,
+        };
+    }
     public static Expression GetExpression()
     {
         char[] operations = { '-', '+', '*', '/' };
@@ -52,5 +64,56 @@ public static class ReadСonsole
         Expression expressionObject = new Expression(num1, num2, operation);
 
         return expressionObject;
+    }
+
+    public static string GetExpressionInPolishNotation()
+    {
+        char[] operations = { '-', '+', '*', '/' };
+        StringBuilder resultString = new StringBuilder();
+        Stack<char> stackT = new Stack<char>();
+
+        string input = Console.ReadLine();
+        
+        foreach (char sign in input)
+        {
+            if (sign == ' ') continue;
+        
+            else if (char.IsDigit(sign))
+            {
+                resultString.Append($"{sign},");
+            }
+            else if (sign == '(')
+            {
+                stackT.Push(sign);
+            }
+            else if (operations.Contains(sign))
+            {
+                while (stackT.Count != 0 &&
+                       stackT.Peek() != '(' &&
+                       GetPriorityOperation(stackT.Peek()) >= GetPriorityOperation(sign))
+                {
+                    resultString.Append($"{stackT.Peek()},");
+                    stackT.Pop();
+                } 
+                stackT.Push(sign);
+            }
+            else if (sign == ')')
+            {
+                while (stackT.Peek() != '(')
+                {
+                    resultString.Append($"{stackT.Peek()},");
+                    stackT.Pop();
+                }
+                stackT.Pop();
+            }
+        }
+
+        while (stackT.Count != 0)
+        {
+            resultString.Append($"{stackT.Peek()},");
+            stackT.Pop();
+        }
+        
+        return resultString.ToString();
     }
 }
