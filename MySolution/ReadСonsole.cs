@@ -69,7 +69,7 @@ public static class ReadСonsole
     public static string GetExpressionInPolishNotation()
     {
         StringBuilder resultString = new StringBuilder();
-        Stack<char> stackT = new Stack<char>();
+        Stack<char> stackForOperations = new Stack<char>();
 
         string input = Console.ReadLine();
         
@@ -83,34 +83,34 @@ public static class ReadСonsole
             }
             else if (sign == '(')
             {
-                stackT.Push(sign);
+                stackForOperations.Push(sign);
             }
             else if (operations.Contains(sign))
             {
-                while (stackT.Count != 0 &&
-                       stackT.Peek() != '(' &&
-                       GetPriorityOperation(stackT.Peek()) >= GetPriorityOperation(sign))
+                while (stackForOperations.Count != 0 &&
+                       stackForOperations.Peek() != '(' &&
+                       GetPriorityOperation(stackForOperations.Peek()) >= GetPriorityOperation(sign))
                 {
-                    resultString.Append($"{stackT.Peek()},");
-                    stackT.Pop();
+                    resultString.Append($"{stackForOperations.Peek()},");
+                    stackForOperations.Pop();
                 } 
-                stackT.Push(sign);
+                stackForOperations.Push(sign);
             }
             else if (sign == ')')
             {
-                while (stackT.Peek() != '(')
+                while (stackForOperations.Peek() != '(')
                 {
-                    resultString.Append($"{stackT.Peek()},");
-                    stackT.Pop();
+                    resultString.Append($"{stackForOperations.Peek()},");
+                    stackForOperations.Pop();
                 }
-                stackT.Pop();
+                stackForOperations.Pop();
             }
         }
 
-        while (stackT.Count != 0)
+        while (stackForOperations.Count != 0)
         {
-            resultString.Append($"{stackT.Peek()},");
-            stackT.Pop();
+            resultString.Append($"{stackForOperations.Peek()},");
+            stackForOperations.Pop();
         }
         
         return resultString.ToString();
