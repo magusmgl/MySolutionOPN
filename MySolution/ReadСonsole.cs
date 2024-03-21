@@ -4,6 +4,7 @@ namespace MyNamespace;
 
 public static class ReadСonsole
 {
+    private static char[] operations = { '-', '+', '*', '/' };
     private static int GetPriorityOperation(char sign)
     {
         return sign switch
@@ -16,7 +17,6 @@ public static class ReadСonsole
     }
     public static Expression GetExpression()
     {
-        char[] operations = { '-', '+', '*', '/' };
         string operation = String.Empty;
         int num1 = 0;
         int num2 = 0;
@@ -68,7 +68,6 @@ public static class ReadСonsole
 
     public static string GetExpressionInPolishNotation()
     {
-        char[] operations = { '-', '+', '*', '/' };
         StringBuilder resultString = new StringBuilder();
         Stack<char> stackT = new Stack<char>();
 
