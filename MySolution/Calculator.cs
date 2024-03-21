@@ -4,29 +4,6 @@ namespace MyNamespace;
 
 public static class Calculator
 {
-    private static char[] operations = { '-', '+', '*', '/' };
-
-    public static int GetResultCalculation(int operand1, int operand2, string operation)
-    {
-        int res = 0;
-        switch (operation)
-        {
-            case "+":
-                res = operand1 + operand2;
-                break;
-            case "-":
-                res = operand1 - operand2;
-                break;
-            case "*":
-                res = operand1 * operand2;
-                break;
-            case "/":
-                res = operand1 / operand2;
-                break;
-        }
-
-        return res;
-    }
 
     public static int GetResultExpressionInPolishNotation(string expression)
     {
@@ -51,6 +28,30 @@ public static class Calculator
         var result = stackForOperands.Peek();
         stackForOperands.Clear();
         return result;
+    }
+
+    private static char[] operations = { '-', '+', '*', '/' };
+
+    private static int GetResultCalculation(int operand1, int operand2, string operation)
+    {
+        int res = 0;
+        switch (operation)
+        {
+            case "+":
+                res = operand1 + operand2;
+                break;
+            case "-":
+                res = operand1 - operand2;
+                break;
+            case "*":
+                res = operand1 * operand2;
+                break;
+            case "/":
+                res = operand1 / operand2;
+                break;
+        }
+
+        return res;
     }
 
     private static void CalculateIntermediateResult(Stack<int> stackForOperands, string element)

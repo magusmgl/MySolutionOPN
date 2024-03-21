@@ -13,8 +13,4 @@ public class Expression
         this.Operation = operation;
     }
 
-    public override string ToString()
-    {
-        return $"{Number1} {Operation} {Number2}";
-    }
 }
