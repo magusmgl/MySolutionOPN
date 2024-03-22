@@ -4,6 +4,7 @@ namespace MyNamespace;
 
 public static class Calculator
 {
+    private static readonly char[] Operations = { '-', '+', '*', '/' };
 
     public static int GetResultExpressionInPolishNotation(string expression)
     {
@@ -19,7 +20,7 @@ public static class Calculator
             {
                 stackForOperands.Push(Int32.Parse(element));
             }
-            else if (operations.Contains(char.Parse(element)))
+            else if (Operations.Contains(char.Parse(element)))
             {
                 CalculateIntermediateResult(stackForOperands, element);
             }
@@ -29,8 +30,6 @@ public static class Calculator
         stackForOperands.Clear();
         return result;
     }
-
-    private static char[] operations = { '-', '+', '*', '/' };
 
     private static int GetResultCalculation(int operand1, int operand2, string operation)
     {
@@ -62,7 +61,7 @@ public static class Calculator
         var a = stackForOperands.Peek();
         stackForOperands.Pop();
 
-        var curentResult = GetResultCalculation(a, b, element);
-        stackForOperands.Push(curentResult);
+        var currentResult = GetResultCalculation(a, b, element);
+        stackForOperands.Push(currentResult);
     }
 }
