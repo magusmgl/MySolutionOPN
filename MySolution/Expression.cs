@@ -27,7 +27,9 @@ public static class Expression
                 continue;
             }
 
-            if (!CheckNumberOfBrackets(input))
+            if (!CheckNumberOfBrackets(input) ||
+                CheckExpressionIntoBrackets(input)
+                )
             {
                 WriteError(WrongBracketsInExpression);
                 continue;
@@ -39,57 +41,21 @@ public static class Expression
                 continue;
             }
 
-            //TO DO:
-            // if (input.EndsWith())
-            //1 + 2 + 23 + ()
-            // 1 + ()
-
-            expression = input;
+            expression = TransformExpressionToPolishNotation(input);
             isCorrectInput = true;
         }
 
         return expression;
     }
 
-    private static void WriteError(string message)
+    private static bool CheckExpressionIntoBrackets(string input)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine(message);
+        if (input.IndexOfAny(Brackets) == 0) return true;
+        var pattern = new Regex(@"\(\d*[+-/*]\)|\([+-/*]\d*\)|\(\)");
+        return pattern.Match(input).Success;
     }
 
-    private static List<string> ConvertExpressionToList(string input)
-    {
-        var listExpression = new List<string>();
-        var num = new List<char>();
-
-        foreach (var element in input)
-        {
-            if (char.IsDigit(element))
-            {
-                num.Add(element);
-            }
-            else if (num.Count != 0)
-            {
-                listExpression.Add(string.Join("", num));
-                num.Clear();
-            }
-
-            if (Operations.Contains(Convert.ToString(element)) ||
-                Brackets.Contains(element))
-            {
-                listExpression.Add(element.ToString());
-            }
-        }
-
-        if (num.Count != 0)
-        {
-            listExpression.Add(string.Join("", num));
-        }
-
-        return listExpression;
-    }
-
-    public static string TransformExpressionToPolishNotation(string inputExpression)
+    private static string TransformExpressionToPolishNotation(string inputExpression)
     {
         var listExp = ConvertExpressionToList(inputExpression);
 
@@ -138,6 +104,44 @@ public static class Expression
         }
 
         return resultString.ToString();
+    }
+
+    private static void WriteError(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+    }
+
+    private static List<string> ConvertExpressionToList(string input)
+    {
+        var listExpression = new List<string>();
+        var num = new List<char>();
+
+        foreach (var element in input)
+        {
+            if (char.IsDigit(element))
+            {
+                num.Add(element);
+            }
+            else if (num.Count != 0)
+            {
+                listExpression.Add(string.Join("", num));
+                num.Clear();
+            }
+
+            if (Operations.Contains(Convert.ToString(element)) ||
+                Brackets.Contains(element))
+            {
+                listExpression.Add(element.ToString());
+            }
+        }
+
+        if (num.Count != 0)
+        {
+            listExpression.Add(string.Join("", num));
+        }
+
+        return listExpression;
     }
 
     private static bool CheckNumberOfBrackets(string brackets)

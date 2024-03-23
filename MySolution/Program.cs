@@ -1,12 +1,10 @@
 ﻿using System.Text;
 using MyNamespace;
+using MySolution;
 
 Console.WriteLine("Программа калькулятор");
 Console.WriteLine("Введите выражение для вычисления:");
 
 var expression = Expression.GetExpressionFromConsole();
-var polishNotationExpression = Expression.TransformExpressionToPolishNotation(expression);
-Console.WriteLine(polishNotationExpression);
-
-var resultExpression = Calculator.GetResultExpressionInPolishNotation(polishNotationExpression);
+var resultExpression = Calculator.GetResultExpression(expression );
 Console.WriteLine(resultExpression);

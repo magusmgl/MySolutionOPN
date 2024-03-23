@@ -1,12 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace MyNamespace;
+namespace MySolution;
 
 public static class Calculator
 {
     private static readonly char[] Operations = { '-', '+', '*', '/' };
 
-    public static int GetResultExpressionInPolishNotation(string expression)
+    public static int GetResultExpression(string expression)
     {
         var stackForOperands = new Stack<int>();
         var elementsExpression = expression.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -31,7 +31,7 @@ public static class Calculator
         return result;
     }
 
-    private static int GetResultCalculation(int operand1, int operand2, string operation)
+    private static int Calculate(int operand1, int operand2, string operation)
     {
         var res = operation switch
         {
@@ -53,7 +53,7 @@ public static class Calculator
         var a = stackForOperands.Peek();
         stackForOperands.Pop();
 
-        var currentResult = GetResultCalculation(a, b, element);
+        var currentResult = Calculate(a, b, element);
         stackForOperands.Push(currentResult);
     }
 }
