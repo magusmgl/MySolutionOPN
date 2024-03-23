@@ -1,36 +1,48 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MyNamespace;
 
 public static class Expression
 {
     private const string EmptyExpression = "Введена пустая строка! Повоторите ввод: ";
-    private const string WrongExpression = "Введено  некорректное выражение! Повоторите ввод: ";
-    private static readonly char[] Operations = { '-', '+', '*', '/' };
+    private const string WrongBracketsInExpression = "Введено  некорректное выражение (проверь скобки)! Повоторите ввод: ";
+    private const string LetterInExpression = "Введено  некорректное выражение (в выражении есть буквы)! Повоторите ввод: ";
+    private static readonly string[] Operations = { "-", "+", "*", "/" };
+    private static readonly char[] Brackets = { '(', ')' };
 
     public static string GetExpressionFromConsole()
     {
-        bool isCorrectInput = false;
-        string expression = String.Empty;
+        var isCorrectInput = false;
+        var expression = string.Empty;
 
         while (isCorrectInput == false)
         {
             Console.ForegroundColor = ConsoleColor.Black;
-            string input = Console.ReadLine();
+            var input = Console.ReadLine();
 
             if (string.IsNullOrEmpty(input))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(EmptyExpression);
+                WriteError(EmptyExpression);
                 continue;
             }
 
             if (!CheckNumberOfBrackets(input))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(WrongExpression);
+                WriteError(WrongBracketsInExpression);
                 continue;
             }
+
+            if (input.Any(char.IsLetter))
+            {
+                WriteError(LetterInExpression);
+                continue;
+            }
+
+            //TO DO:
+            // if (input.EndsWith())
+            //1 + 2 + 23 + ()
+            // 1 + ()
 
             expression = input;
             isCorrectInput = true;
@@ -39,38 +51,77 @@ public static class Expression
         return expression;
     }
 
+    private static void WriteError(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+    }
+
+    private static List<string> ConvertExpressionToList(string input)
+    {
+        var listExpression = new List<string>();
+        var num = new List<char>();
+
+        foreach (var element in input)
+        {
+            if (char.IsDigit(element))
+            {
+                num.Add(element);
+            }
+            else if (num.Count != 0)
+            {
+                listExpression.Add(string.Join("", num));
+                num.Clear();
+            }
+
+            if (Operations.Contains(Convert.ToString(element)) ||
+                Brackets.Contains(element))
+            {
+                listExpression.Add(element.ToString());
+            }
+        }
+
+        if (num.Count != 0)
+        {
+            listExpression.Add(string.Join("", num));
+        }
+
+        return listExpression;
+    }
+
     public static string TransformExpressionToPolishNotation(string inputExpression)
     {
-        StringBuilder resultString = new StringBuilder();
-        Stack<char> stackForOperations = new Stack<char>();
+        var listExp = ConvertExpressionToList(inputExpression);
 
-        foreach (char sign in inputExpression)
+        var resultString = new StringBuilder();
+        var stackForOperations = new Stack<string>();
+        var pattern = new Regex(@"\d+", RegexOptions.Compiled);
+
+        foreach (var element in listExp)
         {
-            if (sign == ' ') continue;
-
-            if (char.IsDigit(sign))
+            if (pattern.Match(element).Success)
             {
-                resultString.Append($"{sign},");
+                resultString.Append($"{element},");
             }
-            else if (sign == '(')
+            else if (element == "(")
             {
-                stackForOperations.Push(sign);
+                stackForOperations.Push(element);
             }
-            else if (Operations.Contains(sign))
+            else if (Operations.Contains(element))
             {
                 while (stackForOperations.Count != 0 &&
-                       stackForOperations.Peek() != '(' &&
-                       GetPriorityOperation(stackForOperations.Peek()) >= GetPriorityOperation(sign))
+                       stackForOperations.Peek() != "(" &&
+                       GetPriorityOperation(stackForOperations.Peek()) >= GetPriorityOperation(element))
                 {
                     resultString.Append($"{stackForOperations.Peek()},");
                     stackForOperations.Pop();
                 }
 
-                stackForOperations.Push(sign);
+                stackForOperations.Push(element);
             }
-            else if (sign == ')')
+            else if (element == ")")
             {
-                while (stackForOperations.Peek() != '(')
+                while (stackForOperations.Peek() != "(")
                 {
                     resultString.Append($"{stackForOperations.Peek()},");
                     stackForOperations.Pop();
@@ -91,7 +142,7 @@ public static class Expression
 
     private static bool CheckNumberOfBrackets(string brackets)
     {
-        Stack<char> stackOfBrackets = new Stack<char>();
+        var stackOfBrackets = new Stack<char>();
         foreach (var bracket in brackets)
         {
             if (stackOfBrackets.Count == 0 && bracket == ')')
@@ -115,14 +166,14 @@ public static class Expression
         return stackOfBrackets.Count == 0;
     }
 
-    private static int GetPriorityOperation(char sign)
+    private static int GetPriorityOperation(string sign)
     {
         return sign switch
         {
-            '-' => 0,
-            '+' => 0,
-            '/' => 1,
-            '*' => 1,
+            "-" => 0,
+            "+" => 0,
+            "/" => 1,
+            "*" => 1,
         };
     }
 }
