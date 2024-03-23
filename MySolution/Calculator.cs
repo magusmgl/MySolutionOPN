@@ -8,9 +8,9 @@ public static class Calculator
 
     public static int GetResultExpressionInPolishNotation(string expression)
     {
-        Stack<int> stackForOperands = new Stack<int>();
-        string[] elementsExpression = expression.Split(",", StringSplitOptions.RemoveEmptyEntries);
-        Regex pattern = new Regex(@"\d+", RegexOptions.Compiled);
+        var stackForOperands = new Stack<int>();
+        var elementsExpression = expression.Split(",", StringSplitOptions.RemoveEmptyEntries);
+        var pattern = new Regex(@"\d+", RegexOptions.Compiled);
 
 
         foreach (var element in elementsExpression)
@@ -18,7 +18,7 @@ public static class Calculator
             var match = pattern.Match(element);
             if (match.Success)
             {
-                stackForOperands.Push(Int32.Parse(element));
+                stackForOperands.Push(int.Parse(element));
             }
             else if (Operations.Contains(char.Parse(element)))
             {
@@ -33,22 +33,14 @@ public static class Calculator
 
     private static int GetResultCalculation(int operand1, int operand2, string operation)
     {
-        int res = 0;
-        switch (operation)
+        var res = operation switch
         {
-            case "+":
-                res = operand1 + operand2;
-                break;
-            case "-":
-                res = operand1 - operand2;
-                break;
-            case "*":
-                res = operand1 * operand2;
-                break;
-            case "/":
-                res = operand1 / operand2;
-                break;
-        }
+            "+" => operand1 + operand2,
+            "-" => operand1 - operand2,
+            "*" => operand1 * operand2,
+            "/" => operand1 / operand2,
+            _ => 0
+        };
 
         return res;
     }
