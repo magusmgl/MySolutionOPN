@@ -29,7 +29,7 @@ public static class Expression
 
             if (!CheckNumberOfBrackets(input) ||
                 CheckExpressionIntoBrackets(input)
-                )
+               )
             {
                 WriteError(WrongBracketsInExpression);
                 continue;
@@ -50,7 +50,7 @@ public static class Expression
 
     private static bool CheckExpressionIntoBrackets(string input)
     {
-        if (input.IndexOfAny(Brackets) == 0) return true;
+        if (input.IndexOfAny(Brackets) == -1) return true;
         var pattern = new Regex(@"\(\d*[+-/*]\)|\([+-/*]\d*\)|\(\)");
         return pattern.Match(input).Success;
     }
