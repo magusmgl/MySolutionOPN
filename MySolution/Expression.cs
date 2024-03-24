@@ -7,6 +7,7 @@ public static class Expression
 {
     private const string EmptyExpression = "Введена пустая строка! Повоторите ввод: ";
     private const string WrongBracketsInExpression = "Введено  некорректное выражение (проверь скобки)! Повоторите ввод: ";
+    private const string WrongExpressionInBrackets = "Введено  некорректное выражение в скобках! Повоторите ввод: ";
     private const string WrongElementsInExpression = "Введено  некорректное выражение (в выражении есть недопустимые символы)! Повоторите ввод: ";
     private static readonly string[] Operations = { "-", "+", "*", "/" };
     private static readonly char[] Brackets = { '(', ')' };
@@ -27,10 +28,16 @@ public static class Expression
                 continue;
             }
 
-            if (CheckNumberOfBrackets(input) == false ||
-                CheckExpressionIntoBrackets(input) == false)
+            if (CheckBalanceBrackets(input) == false) 
+                
             {
                 WriteError(WrongBracketsInExpression);
+                continue;
+            }
+
+            if (CheckExpressionIntoBrackets(input) == false)
+            {
+                WriteError(WrongExpressionInBrackets);
                 continue;
             }
 
@@ -57,7 +64,7 @@ public static class Expression
     {
         if (input.IndexOfAny(Brackets) == -1) return true;
         var pattern = new Regex(@"\(\d*[+-/*]\)|\([+-/*]\d*\)|\(\)", RegexOptions.Compiled);
-        return pattern.Match(input).Success;
+        return !pattern.Match(input).Success;
     }
 
     private static string TransformExpressionToPolishNotation(string inputExpression)
@@ -149,7 +156,7 @@ public static class Expression
         return listExpression;
     }
 
-    private static bool CheckNumberOfBrackets(string brackets)
+    private static bool CheckBalanceBrackets(string brackets)
     {
         var stackOfBrackets = new Stack<char>();
         foreach (var bracket in brackets)
