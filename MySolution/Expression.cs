@@ -19,35 +19,37 @@ public static class Expression
 
         while (isCorrectInput == false)
         {
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Green;
             var input = Console.ReadLine();
+            var inputWithoutWhiteSpaces = string.Concat(input.Where(c => !char.IsWhiteSpace(c)));
 
-            if (string.IsNullOrEmpty(input))
+
+            if (string.IsNullOrEmpty(inputWithoutWhiteSpaces))
             {
                 WriteError(EmptyExpression);
                 continue;
             }
 
-            if (CheckBalanceBrackets(input) == false) 
-                
+            if (CheckBalanceBrackets(inputWithoutWhiteSpaces) == false)
+
             {
                 WriteError(WrongBracketsInExpression);
                 continue;
             }
 
-            if (CheckExpressionIntoBrackets(input) == false)
+            if (CheckExpressionIntoBrackets(inputWithoutWhiteSpaces) == false)
             {
                 WriteError(WrongExpressionInBrackets);
                 continue;
             }
 
-            if (CheckExpressionElements(input))
+            if (CheckExpressionElements(inputWithoutWhiteSpaces))
             {
                 WriteError(WrongElementsInExpression);
                 continue;
             }
 
-            expression = TransformExpressionToPolishNotation(input);
+            expression = TransformExpressionToPolishNotation(inputWithoutWhiteSpaces);
             isCorrectInput = true;
         }
 
@@ -124,35 +126,19 @@ public static class Expression
         Console.WriteLine(message);
     }
 
-    private static List<string> ConvertExpressionToList(string input)
+    public static List<string> ConvertExpressionToList(string input)
     {
         var listExpression = new List<string>();
-        var num = new List<char>();
 
-        foreach (var element in input)
+        string pattern = @"(?<=\()([-]?\d+)|[()]|(?<=[-+*\/])([-]?\d+)|[-+*\/]|^[-]?\d";
+        foreach (Match match in Regex.Matches(input, pattern, RegexOptions.IgnoreCase))
         {
-            if (char.IsDigit(element))
+            if (match.Success)
             {
-                num.Add(element);
-            }
-            else if (num.Count != 0)
-            {
-                listExpression.Add(string.Join("", num));
-                num.Clear();
-            }
-
-            if (Operations.Contains(Convert.ToString(element)) ||
-                Brackets.Contains(element))
-            {
-                listExpression.Add(element.ToString());
+                Console.WriteLine($"{match.Value}");
+                listExpression.Add(match.Value);
             }
         }
-
-        if (num.Count != 0)
-        {
-            listExpression.Add(string.Join("", num));
-        }
-
         return listExpression;
     }
 

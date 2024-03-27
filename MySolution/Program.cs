@@ -6,5 +6,5 @@ Console.WriteLine("Программа калькулятор");
 Console.WriteLine("Введите выражение для вычисления:");
 
 var expression = Expression.GetExpressionFromConsole();
-var resultExpression = Calculator.GetResultExpression(expression );
+var resultExpression = Calculator.GetResultExpression(expression);
 Console.WriteLine(resultExpression);
