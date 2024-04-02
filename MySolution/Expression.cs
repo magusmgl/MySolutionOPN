@@ -135,7 +135,6 @@ public static class Expression
         {
             if (match.Success)
             {
-                Console.WriteLine($"{match.Value}");
                 listExpression.Add(match.Value);
             }
         }
